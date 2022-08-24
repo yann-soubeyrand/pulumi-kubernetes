@@ -250,9 +250,12 @@ func NewChart(ctx *pulumi.Context,
 		return nil, err
 	}
 
-	releaseName := name
-	if args.ResourcePrefix != "" {
-		releaseName = args.ResourcePrefix + "-" + name
+	if args.ReleaseName == nil {
+		releaseName := name
+		if args.ResourcePrefix != "" {
+			releaseName = args.ResourcePrefix + "-" + name
+		}
+		args.ReleaseName = pulumi.String(releaseName)
 	}
 
 	parseOpts, err := yaml.GetChildOptions(chart, opts)
@@ -260,7 +263,7 @@ func NewChart(ctx *pulumi.Context,
 		return nil, err
 	}
 	resources := args.ToChartArgsOutput().ApplyT(func(args chartArgs) (map[string]pulumi.Resource, error) {
-		return parseChart(ctx, releaseName, args, parseOpts...)
+		return parseChart(ctx, args, parseOpts...)
 	})
 	chart.Resources = resources
 
@@ -284,19 +287,9 @@ func NewChart(ctx *pulumi.Context,
 	return chart, nil
 }
 
-func parseChart(ctx *pulumi.Context, releaseName string, args chartArgs, opts ...pulumi.ResourceOption,
+func parseChart(ctx *pulumi.Context, args chartArgs, opts ...pulumi.ResourceOption,
 ) (map[string]pulumi.Resource, error) {
-	type jsonOptsArgs struct {
-		chartArgs
-
-		ReleaseName string `json:"release_name,omitempty"`
-	}
-	jsonOpts := jsonOptsArgs{
-		chartArgs:   args,
-		ReleaseName: releaseName,
-	}
-
-	b, err := json.Marshal(jsonOpts)
+	b, err := json.Marshal(args)
 	if err != nil {
 		return nil, err
 	}

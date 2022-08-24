@@ -125,6 +125,8 @@ type ChartArgs struct {
 	SkipAwait pulumi.BoolInput
 	// By default CRDs are also rendered along side templates. Set this to skip CRDs.
 	SkipCRDRendering pulumi.BoolInput
+	// The optional release name used for templating.
+	ReleaseName pulumi.StringInput
 	// The optional namespace to install chart resources into.
 	Namespace pulumi.StringInput
 	// By default, the kubernetes version is derived from your k8s context, this allows it to be overridden.
@@ -164,6 +166,7 @@ type chartArgs struct {
 	IncludeTestHookResources bool                   `json:"include_test_hook_resources,omitempty" pulumi:"includeTestHookResources"`
 	SkipAwait                bool                   `json:"skip_await,omitempty" pulumi:"skipAwait"`
 	SkipCRDRendering         bool                   `json:"skip_crd_rendering,omitempty" pulumi:"skipCRDRendering"`
+	ReleaseName              string                 `json:"release_name"`
 	Namespace                string                 `json:"namespace,omitempty" pulumi:"namespace"`
 	Values                   map[string]interface{} `json:"values,omitempty" pulumi:"values"`
 	Transformations          []yaml.Transformation  `json:"-" pulumi:"transformations"`

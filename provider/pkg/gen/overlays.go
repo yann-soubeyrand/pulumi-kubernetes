@@ -85,6 +85,12 @@ var helmV3ChartResource = pschema.ResourceSpec{
 			},
 			Description: "The path to the chart directory which contains the `Chart.yaml` file.\n\nRequired if specifying `LocalChartOpts`.",
 		},
+		"releaseName": {
+			TypeSpec: pschema.TypeSpec{
+				Type: "string",
+			},
+			Description: "The optional release name used for templating.",
+		},
 		"namespace": {
 			TypeSpec: pschema.TypeSpec{
 				Type: "string",
